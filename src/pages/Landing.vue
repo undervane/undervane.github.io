@@ -61,6 +61,7 @@
 		justify-content: space-evenly;
 		align-items: center;
 		align-content: center;
+		overflow: hidden;
 
 		@apply relative justify-around flex min-h-screen flex-wrap items-center flex-row-reverse w-full max-w-full;
 	}
