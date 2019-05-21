@@ -25,9 +25,11 @@
 
 		data = StaticData;
 
+		activeMessage = false;
+
 		button = {
 			name: 'About me',
-			callback: callbackFunction
+			callback: this.showMessage
 		};
 
 		social = [
@@ -48,10 +50,40 @@
 			},
 			{
 				key: 'envelope',
-				callback: callbackFunction,
+				callback: this.copyEmail,
 			},
 		];
 
+		copyEmail() {
+
+			if (this.activeMessage) { return; }
+
+			const clipboard = navigator.clipboard;
+
+			if (clipboard) {
+				clipboard.writeText('sergio@mipigu.com');
+				message.success('Email has been copied to your clipboard',
+					5, () => this.activeMessage = false);
+			} else {
+				message.warning(
+					`Could not copy email to your clipboard,
+				 	 so here you have it: sergio@mipigu.com`,
+					20, () => this.activeMessage = false);
+			}
+
+			this.activeMessage = true;
+		}
+
+		showMessage() {
+
+			if (this.activeMessage) { return; }
+
+			message.warn(`Still thinking about what this big blue
+			 button can do, any recomendations? 😜`,
+				10, () => this.activeMessage = false);
+
+			this.activeMessage = true;
+		}
 	}
 
 	const callbackFunction = () => {
@@ -71,7 +103,7 @@
 
 	.card {
 		z-index: 1;
-		max-width: 29em;
+		max-width: 33em;
 		@apply h-full w-full px-6 select-none my-5;
 	}
 

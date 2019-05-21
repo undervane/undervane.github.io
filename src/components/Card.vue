@@ -5,7 +5,7 @@
 		<div class="mt-6 text-center sm:text-left">
 			<button
 				v-if="button"
-				@click="toggleShow"
+				@click="el.is.small ? toggleShow() : button.callback()"
 				class="base-btn focus:outline-none w-full sm:w-auto sm:mr-3 mb-3 sm:mb-0"
 			>{{ button.name }}</button>
 			<p v-if="show && el.is.small" class="card-body text-justify mt-2">{{ body }}</p>
@@ -51,7 +51,7 @@
 		};
 
 		toggleShow() {
-			this.show = this.el.is.small ? !this.show : false;
+			this.show = !this.show;
 		}
 
 	}
