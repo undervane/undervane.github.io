@@ -5,6 +5,7 @@
 <script lang="ts">
 	import { Component, Vue } from 'vue-property-decorator';
 	import Landing from '@/pages/Landing.vue';
+	import "ant-design-vue/dist/antd.css";
 
 	@Component({
 		components: {

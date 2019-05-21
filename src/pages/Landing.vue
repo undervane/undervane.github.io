@@ -12,6 +12,7 @@
 	import Card from "@/components/Card.vue";
 	import Iceberg from "@/components/svg/Iceberg.vue";
 	import Ripple from "@/components/Ripple.vue";
+	import { message } from 'ant-design-vue';
 
 	@Component({
 		components: {
@@ -53,7 +54,9 @@
 
 	}
 
-	const callbackFunction = () => console.log('callback');
+	const callbackFunction = () => {
+		message.success('Email copied to clipboard');
+	};
 </script>
 
 <style lang="scss" scoped>
@@ -86,4 +89,12 @@
 		@apply absolute pin-l pin-t w-full h-full;
 	}
 </style>
+
+<style>
+	.ant-message {
+		top: unset !important;
+		bottom: 16px !important;
+	}
+</style>
+
 
