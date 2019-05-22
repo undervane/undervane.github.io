@@ -1,1 +1,1 @@
-declare module 'vue-awesome'
+declare module 'vue-awesome';
