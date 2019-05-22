@@ -25,7 +25,8 @@
 
 		data = StaticData;
 
-		activeMessage = false;
+		activeButtonMessage = false;
+		activeEmailMessage = false;
 
 		button = {
 			name: 'About me',
@@ -56,33 +57,33 @@
 
 		copyEmail() {
 
-			if (this.activeMessage) { return; }
+			if (this.activeEmailMessage) { return; }
 
 			const clipboard = navigator.clipboard;
 
 			if (clipboard) {
 				clipboard.writeText('sergio@mipigu.com');
 				message.success('Email has been copied to your clipboard',
-					5, () => this.activeMessage = false);
+					5, () => this.activeEmailMessage = false);
 			} else {
 				message.warning(
 					`Could not copy email to your clipboard,
 				 	 so here you have it: sergio@mipigu.com`,
-					20, () => this.activeMessage = false);
+					20, () => this.activeEmailMessage = false);
 			}
 
-			this.activeMessage = true;
+			this.activeEmailMessage = true;
 		}
 
 		showMessage() {
 
-			if (this.activeMessage) { return; }
+			if (this.activeButtonMessage) { return; }
 
 			message.warn(`Still thinking about what this big blue
 			 button can do, any recomendations? 😜`,
-				10, () => this.activeMessage = false);
+				8, () => this.activeButtonMessage = false);
 
-			this.activeMessage = true;
+			this.activeButtonMessage = true;
 		}
 	}
 
