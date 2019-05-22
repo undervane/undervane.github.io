@@ -36,17 +36,14 @@
 		social = [
 			{
 				key: 'brands/twitter',
-				callback: callbackFunction,
 				url: 'https://twitter.com/undervane'
 			},
 			{
 				key: 'brands/linkedin',
-				callback: callbackFunction,
 				url: 'https://www.linkedin.com/in/undervane/'
 			},
 			{
 				key: 'brands/github',
-				callback: callbackFunction,
 				url: 'https://github.com/undervane'
 			},
 			{
@@ -86,10 +83,6 @@
 			this.activeButtonMessage = true;
 		}
 	}
-
-	const callbackFunction = () => {
-		message.success('Email copied to clipboard');
-	};
 </script>
 
 <style lang="scss" scoped>

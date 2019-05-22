@@ -13,7 +13,7 @@
 				<a
 					class="card-icon cursor-pointer text-blue-lighter hover:text-blue"
 					v-for="icon in social"
-					@click="icon.callback"
+					@click="icon.callback ? icon.callback() : null"
 					:href="icon.url"
 					target="_blank"
 				>
