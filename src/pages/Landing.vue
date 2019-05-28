@@ -12,7 +12,7 @@
 	import Card from "@/components/Card.vue";
 	import Iceberg from "@/components/svg/Iceberg.vue";
 	import Ripple from "@/components/Ripple.vue";
-	import { message } from 'ant-design-vue/lib/message';
+	import message from 'ant-design-vue/lib/message';
 
 	@Component({
 		components: {
