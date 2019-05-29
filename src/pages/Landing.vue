@@ -12,7 +12,14 @@
 	import Card from "@/components/Card.vue";
 	import Iceberg from "@/components/svg/Iceberg.vue";
 	import Ripple from "@/components/Ripple.vue";
+
 	import message from 'ant-design-vue/lib/message';
+	import 'ant-design-vue/lib/message/style/css';
+
+	import 'vue-awesome/icons/brands/twitter';
+	import 'vue-awesome/icons/brands/linkedin';
+	import 'vue-awesome/icons/brands/github';
+	import 'vue-awesome/icons/envelope';
 
 	@Component({
 		components: {
