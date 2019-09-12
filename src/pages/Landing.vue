@@ -1,17 +1,23 @@
 <template>
-	<main class="landing">
-		<Ripple class="ripple min-w-screen min-h-screen"/>
-		<Iceberg class="iceberg"/>
-		<Card class="card" :title="data.title" :body="data.body" :button="button" :social="social"/>
-	</main>
+	<section class="relative">
+		<div class="chat">
+			<Chatbox />
+		</div>
+		<main class="landing" :class="{ 'chatOpen': showChat, 'dark': darkMode}">
+			<Ripple class="ripple min-w-screen min-h-screen" />
+			<Iceberg class="iceberg" />
+			<Card class="card" :title="data.title" :body="data.body" :button="button" :social="social" />
+		</main>
+	</section>
 </template>
 
 <script lang="ts">
-	import { Component, Vue } from "vue-property-decorator";
+	import { Component, Vue, Watch } from "vue-property-decorator";
 	import StaticData from "@/assets/data";
 	import Card from "@/components/Card.vue";
 	import Iceberg from "@/components/svg/Iceberg.vue";
 	import Ripple from "@/components/Ripple.vue";
+	import Chatbox from "@/components/Chatbox.vue";
 
 	import message from 'ant-design-vue/lib/message';
 	import 'ant-design-vue/lib/message/style/css';
@@ -25,20 +31,27 @@
 		components: {
 			Card,
 			Iceberg,
-			Ripple
+			Ripple,
+			Chatbox
 		}
 	})
 	export default class Landing extends Vue {
 
 		data = StaticData;
+		showChat = false;
+		darkMode = false;
 
 		activeButtonMessage = false;
 		activeEmailMessage = false;
 
 		button = {
-			name: 'About me',
-			callback: this.showMessage
+			name: this.showChat ? 'Close' : 'Say hello 👋',
+			callback: this.displayChat
 		};
+
+		get status() {
+			return this.$store.state.light.status;
+		}
 
 		social = [
 			{
@@ -58,6 +71,20 @@
 				callback: this.copyEmail,
 			},
 		];
+
+		@Watch("status")
+		toggleStatus(): void {
+			this.darkMode = !this.darkMode;
+		}
+
+		@Watch("showChat")
+		toggleChat(): void {
+			this.button = {
+				name: this.showChat ? 'Hide Chat' : 'Say hello 👋',
+				callback: this.displayChat
+			};
+
+		}
 
 		copyEmail() {
 
@@ -79,6 +106,10 @@
 			this.activeEmailMessage = true;
 		}
 
+		displayChat() {
+			this.showChat = !this.showChat;
+		}
+
 		showMessage() {
 
 			if (this.activeButtonMessage) { return; }
@@ -98,6 +129,8 @@
 		align-items: center;
 		align-content: center;
 		overflow: hidden;
+		background-color: white;
+		transition: background-color 3s, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 
 		@apply relative justify-around flex min-h-screen flex-wrap items-center flex-row-reverse w-full max-w-full;
 	}
@@ -120,6 +153,18 @@
 
 	.ripple {
 		@apply absolute pin-l pin-t w-full h-full;
+	}
+
+	.chatOpen {
+		transform: translateX(350px);
+	}
+
+	.chat {
+		position: absolute;
+		width: 350px;
+		background-color: rgb(46, 118, 242);
+		min-height: 100vh;
+		height: 100%;
 	}
 </style>
 

@@ -11,13 +11,12 @@ $white: white;
 /* General */
 
 body {
-    font-family: 'Open Sans', sans-serif;   
-    background-color: $white;
-    transition: background-color 4s;  
+    font-family: 'Open Sans', sans-serif;  
+    overflow-x: hidden;  
 }
 
 .dark {
-    background-color: $dark;
+    background-color: $dark !important;
 }
 
 .highlight-disable {

@@ -6,7 +6,7 @@
 			:cx="position.x"
 			:cy="position.y"
 			:r="ripple.radius"
-		></circle>
+		/>
 	</svg>
 </template>
 
@@ -55,7 +55,7 @@
 
 	.ripple {
 		fill: $dark;
-		z-index: -1;
+		z-index: 1;
 	}
 
 	.fill-white {

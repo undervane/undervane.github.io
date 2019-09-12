@@ -23,8 +23,6 @@ export class LightModule extends VuexModule {
 		this.context.commit('setLastPosition', payload);
 		this.context.commit('toggleStatus');
 
-		this.status ? document.body.classList.add('dark') : document.body.classList.remove('dark');
-
 		return payload;
 	}
 
