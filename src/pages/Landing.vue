@@ -80,7 +80,7 @@
 		@Watch("showChat")
 		toggleChat(): void {
 			this.button = {
-				name: this.showChat ? 'Hide Chat' : 'Say hello 👋',
+				name: this.showChat ? 'Hide chat' : 'Say hello 👋',
 				callback: this.displayChat
 			};
 
@@ -162,7 +162,7 @@
 	.chat {
 		position: absolute;
 		width: 350px;
-		background-color: rgb(46, 118, 242);
+		background: linear-gradient(90deg, #009cf5 -30%, #3231f9 100%);
 		min-height: 100vh;
 		height: 100%;
 	}
