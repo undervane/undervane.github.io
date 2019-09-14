@@ -5,7 +5,7 @@
 		</div>
 
 		<div class="h-full overflow-scroll" style="overscroll-behavior-y: contain;">
-			<div id="scroller" class="w-full pb-2 px-2" style="margin-bottom: 120px;">
+			<div id="scroller" class="w-full pb-2 px-2" style="margin-bottom: 145px;">
 				<transition-group name="list" tag="p">
 					<div
 						v-for="(message, index) in messages"
@@ -25,7 +25,19 @@
 				</transition-group>
 				<div id="anchor"></div>
 			</div>
-			<form class="w-full fixed md:absolute pin-b pin-l form-bg" @submit.prevent="send">
+			<form class="w-full fixed md:absolute pin-b pin-l form-bg" @submit.prevent="() => send()">
+				<transition name="commands-fade">
+					<div v-if="this.$socket.connected" class="flex ml-2 mr-4 mt-4 overflow-x-auto">
+						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/contact')">Contact</button>
+						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/hello')">Hello</button>
+						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/close')">Close</button>
+						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/close')">Close</button>
+						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/close')">Close</button>
+						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/close')">Close</button>
+						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/close')">Close</button>
+						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/close')">Close</button>
+					</div>
+				</transition>
 				<div class="flex items-center bg-white p-3 m-4 rounded-full">
 					<span v-show="$socket.connected" class="dot bg-green"></span>
 					<span v-show="$socket.disconnected" class="dot bg-red-light"></span>
@@ -37,7 +49,7 @@
 						:placeholder="placeholder"
 					/>
 					<button
-						@click.prevent="send"
+						@click.prevent="() => send()"
 						:disabled="inputDisabled"
 						class="flex-shrink-0 bg-blue hover:bg-indigo-500 hover:border-indigo-500 text-md text-white rounded-full"
 						type="button"
@@ -125,10 +137,10 @@
 			});
 		}
 
-		send() {
+		send(message = this.message) {
 
 			if (
-				this.message === "" ||
+				message === "" ||
 				this.connecting ||
 				this.inputDisabled
 			) {
@@ -138,14 +150,14 @@
 			if (this.messages.length === 2) {
 				this.$store.dispatch('chat/setDisabled', true);
 				this.$store.dispatch('chat/setPlaceholder', 'Connecting...');
-				this.$socket.client.io.opts.query = { name: this.message };
+				this.$socket.client.io.opts.query = { name: message };
 				this.$socket.client.connect();
 				this.connecting = true;
 			} else {
-				this.$socket.client.emit('message', this.message);
+				this.$socket.client.emit('message', message);
 			}
 
-			this.$store.dispatch('chat/addMessage', { text: this.message, fromUser: true });
+			this.$store.dispatch('chat/addMessage', { text: message, fromUser: true });
 			this.message = "";
 		}
 
@@ -212,5 +224,16 @@
 
 		/* anchor nodes are required to have non-zero area */
 		height: 1px;
+	}
+
+	.commands-fade-enter-active,
+	.commands-fade-leave-active {
+		transition: all 0.4s ease;
+	}
+
+	.commands-fade-enter,
+	.commands-fade-leave-to {
+		transform: translateX(-10px);
+		opacity: 0;
 	}
 </style>
