@@ -37,13 +37,17 @@
 	import { Component, Vue, Prop } from "vue-property-decorator";
 
 	@Component
-	export default class Card extends Vue {
+	export default class Sun extends Vue {
 
 		@Prop()
 		dark!: boolean;
 
+		get isChatOpen() {
+			return this.$store.state.chat.open;
+		}
+
 		toggleStatus(event) {
-			this.$store.dispatch("light/toggle", event);
+			if (!this.isChatOpen) { this.$store.dispatch("light/toggle", event) }
 		}
 	}
 </script>
