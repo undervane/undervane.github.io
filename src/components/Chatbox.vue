@@ -1,36 +1,46 @@
 <template>
-	<div class="h-full flex content-between flex-wrap">
-		<div class="w-full py-4 px-2">
-			<div
-				v-for="message in messages"
-				class="block w-full"
-				:class="message.fromUser ? 'flex-row-reverse' : 'self-start'"
-			>
-				<div v-if="!isEmoji(message.text, 3)" class="px-4 py-2 bg-chat m-2 block w-2/3 rounded-full">
-					<p class="p-1 text-gray-100">{{ message.text }}</p>
-				</div>
+	<div class="h-full flex content-between flex-wrap overflow-scroll">
+		<div id="scroller" class="w-full py-4 px-2">
+			<transition-group name="list" tag="p">
+				<div
+					v-for="(message, index) in messages"
+					:key="index"
+					class="block w-full flex"
+					:class="message.fromUser ? 'justify-end text-right' : 'justify-left'"
+				>
+					<div
+						v-if="!isEmoji(message.text, 3)"
+						class="px-4 py-2 bg-chat m-2 block max-w-2/3 rounded-full"
+					>
+						<p class="p-1 text-gray-100">{{ message.text }}</p>
+					</div>
 
-				<p v-else class="p-1 m-1 text-5xl">{{ message.text }}</p>
-			</div>
-			<!-- <div class="flex justify-end block w-full">
-				<div class="px-4 py-2 bg-chat m-2 block w-2/3 justify-end flex rounded-full">
-					<p class="p-1 text-gray-100">Text 2</p>
+					<p v-else class="p-1 mx-1 text-5xl">{{ message.text }}</p>
 				</div>
-			</div>-->
+			</transition-group>
+			<div id="anchor"></div>
 		</div>
-		<form class="block w-full" @submit.prevent="send">
+		<form class="block w-full sticky pin-b form-bg" @submit.prevent="send">
 			<div class="flex items-center bg-white p-3 m-4 rounded-full">
+				<span v-show="$socket.connected" class="dot bg-green"></span>
+				<span v-show="!$socket.connected" class="dot bg-red-light"></span>
 				<input
+					v-uppercaseInitial
 					v-model="message"
 					class="resize-none appearance-none bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-4 leading-tight focus:outline-none text-xl"
-					placeholder="Say something"
+					:placeholder="messages.length < 3 ? 'Write your name' : 'Say something'"
 				/>
 				<button
 					@click.prevent="send"
-					class="flex-shrink-0 bg-blue hover:bg-indigo-500 border-indigo-600 hover:border-indigo-500 text-md border-4 text-white py-3 px-4 rounded-full"
+					:disabled="inputDisabled"
+					class="flex-shrink-0 bg-blue hover:bg-indigo-500 hover:border-indigo-500 text-md text-white rounded-full"
 					type="button"
 				>
-					<i class="far fa-paper-plane"></i>
+					<v-icon
+						class="align-middle m-2 mx-3"
+						:spin="connecting"
+						:name="connecting ? 'cog' : 'paper-plane'"
+					/>
 				</button>
 			</div>
 		</form>
@@ -39,34 +49,102 @@
 
 <script lang="ts">
 	import { Component, Vue } from "vue-property-decorator";
+	import 'vue-awesome/icons/paper-plane';
+	import 'vue-awesome/icons/cog';
+	import { Socket } from 'vue-socket.io-extended';
+	import { sleep } from '../utils';
 
 	@Component({
+		directives: {
+			uppercaseInitial: {
+				componentUpdated(el: any) {
+					el.value = el.value.charAt(0).toUpperCase() + el.value.slice(1)
+				}
+			}
+		}
 	})
 	export default class Navbar extends Vue {
 
+		connecting = false;
+
 		message = "";
 
-		messages = [
-			{
-				text: "Hey! Thanks for coming over here, what's your name?",
+		get messages() {
+			return this.$store.state.chat.messages;
+		}
+
+		get inputDisabled() {
+			return this.$store.state.chat.disabled;
+		}
+
+		@Socket('connect')
+		async onConnect(obj) {
+			this.connecting = false;
+
+			await sleep(300);
+			this.$store.dispatch('chat/addMessage', {
+				text: 'Yay! Hello ' + (this.$socket.client.io.opts.query! as any).name,
 				fromUser: false
-			},
-			{
-				text: '😊'
-			}
-		];
+			})
+			this.$store.dispatch('chat/setDisabled', false);
+		}
+
+		@Socket('disconnect')
+		onDisconnect(response) {
+			this.$socket.client.disconnect()
+		}
+
+		@Socket('response')
+		onResponse(response) {
+			this.$store.dispatch('chat/addMessage', {
+				text: response,
+				fromUser: false
+			})
+		}
+
+		@Socket('smartReply')
+		onSmartReply(smartReply) {
+			this.$store.dispatch('chat/addMessage', {
+				text: smartReply,
+				fromUser: false
+			})
+		}
 
 		send() {
 
-			if (this.message === "") {
+			if (
+				this.message === "" ||
+				this.connecting ||
+				this.inputDisabled
+			) {
 				return;
 			}
 
-			this.messages.push({ text: this.message, fromUser: true })
+			if (this.messages.length === 2) {
+				this.$store.dispatch('chat/setDisabled', true);
+				this.$socket.client.io.opts.query = { name: this.message }
+				this.$socket.client.connect();
+				this.connecting = true;
+			}
+
+			else {
+				this.$socket.client.emit('message', this.message);
+			}
+
+			this.$store.dispatch('chat/addMessage', { text: this.message, fromUser: true });
 			this.message = "";
 		}
 
+		uppercaseInital(string): string {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
+
 		isEmoji(value: string, max = 3) {
+
+			if (typeof value !== 'string') {
+				return false;
+			}
+
 			// eslint-disable-next-line
 			const match = value.match(/^(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|[\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|[\ud83c[\ude32-\ude3a]|[\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff]){1,3}$/g);
 			return match;
@@ -77,5 +155,44 @@
 <style lang="scss" scoped>
 	.bg-chat {
 		background-color: azure;
+	}
+
+	.form-bg {
+		background: linear-gradient(90deg, #009cf5 -30%, #3231f9 100%);
+	}
+
+	.dot {
+		width: 11px;
+		height: 8px;
+		margin-left: 10px;
+		margin-top: 2px;
+
+		@apply rounded-full;
+	}
+
+	.list-enter-active,
+	.list-leave-active {
+		transition: all 0.8s;
+	}
+	.list-enter:not(.justify-end), .list-leave-to:not(.justify-end) /* .list-leave-active below version 2.1.8 */ {
+		opacity: 0;
+		transform: translateX(-30px);
+	}
+	.list-enter.justify-end, .list-leave-to.justify-end /* .list-leave-active below version 2.1.8 */ {
+		opacity: 0;
+		transform: translateX(30px);
+	}
+
+	#scroller * {
+		/* don't allow the children of the scrollable element to be selected as an anchor node */
+		overflow-anchor: none;
+	}
+
+	#anchor {
+		/* allow the final child to be selected as an anchor node */
+		overflow-anchor: auto;
+
+		/* anchor nodes are required to have non-zero area */
+		height: 1px;
 	}
 </style>

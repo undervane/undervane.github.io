@@ -3,7 +3,7 @@
 		<div class="chat">
 			<Chatbox />
 		</div>
-		<main class="landing" :class="{ 'chatOpen': showChat, 'dark': darkMode}">
+		<main class="landing" :class="{ 'isChatOpen': isChatOpen, 'dark': darkMode}">
 			<Ripple class="ripple min-w-screen min-h-screen" />
 			<Iceberg class="iceberg" />
 			<Card class="card" :title="data.title" :body="data.body" :button="button" :social="social" />
@@ -38,19 +38,22 @@
 	export default class Landing extends Vue {
 
 		data = StaticData;
-		showChat = false;
 		darkMode = false;
 
 		activeButtonMessage = false;
 		activeEmailMessage = false;
 
 		button = {
-			name: this.showChat ? 'Close' : 'Say hello 👋',
-			callback: this.displayChat
+			name: this.isChatOpen ? 'Close' : 'Say hello 👋',
+			callback: this.toggleChat
 		};
 
 		get status() {
 			return this.$store.state.light.status;
+		}
+
+		get isChatOpen() {
+			return this.$store.state.chat.open;
 		}
 
 		social = [
@@ -77,11 +80,11 @@
 			this.darkMode = !this.darkMode;
 		}
 
-		@Watch("showChat")
-		toggleChat(): void {
+		@Watch("isChatOpen")
+		onChatToggle(): void {
 			this.button = {
-				name: this.showChat ? 'Hide chat' : 'Say hello 👋',
-				callback: this.displayChat
+				name: this.isChatOpen ? 'Hide chat' : 'Say hello 👋',
+				callback: this.toggleChat
 			};
 
 		}
@@ -106,8 +109,8 @@
 			this.activeEmailMessage = true;
 		}
 
-		displayChat() {
-			this.showChat = !this.showChat;
+		toggleChat() {
+			this.$store.dispatch('chat/toggleChat');
 		}
 
 		showMessage() {
@@ -155,7 +158,7 @@
 		@apply absolute pin-l pin-t w-full h-full;
 	}
 
-	.chatOpen {
+	.isChatOpen {
 		transform: translateX(350px);
 	}
 
