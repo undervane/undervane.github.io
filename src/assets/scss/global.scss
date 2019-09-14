@@ -11,7 +11,8 @@ $white: white;
 /* General */
 
 body {
-    font-family: 'Open Sans', sans-serif;  
+    font-family: 'Open Sans', sans-serif;
+    overscroll-behavior: none;
     overflow-x: hidden;  
     color: inherit;
 }

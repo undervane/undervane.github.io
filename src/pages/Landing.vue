@@ -1,13 +1,8 @@
 <template>
-	<section class="relative">
-		<div class="chat">
-			<Chatbox />
-		</div>
-		<main class="landing" :class="{ 'isChatOpen': isChatOpen, 'dark': darkMode}">
-			<Ripple class="ripple min-w-screen min-h-screen" />
-			<Iceberg class="iceberg" />
-			<Card class="card" :title="data.title" :body="data.body" :button="button" :social="social" />
-		</main>
+	<section class="landing" :class="{'dark': darkMode}">
+		<Ripple class="ripple min-w-screen min-h-screen" />
+		<Iceberg class="iceberg" />
+		<Card class="card" :title="data.title" :body="data.body" :button="button" :social="social" />
 	</section>
 </template>
 
@@ -17,7 +12,6 @@
 	import Card from "@/components/Card.vue";
 	import Iceberg from "@/components/svg/Iceberg.vue";
 	import Ripple from "@/components/Ripple.vue";
-	import Chatbox from "@/components/Chatbox.vue";
 
 	import message from 'ant-design-vue/lib/message';
 	import 'ant-design-vue/lib/message/style/css';
@@ -32,7 +26,6 @@
 			Card,
 			Iceberg,
 			Ripple,
-			Chatbox
 		}
 	})
 	export default class Landing extends Vue {
@@ -156,18 +149,6 @@
 
 	.ripple {
 		@apply absolute pin-l pin-t w-full h-full;
-	}
-
-	.isChatOpen {
-		transform: translateX(350px);
-	}
-
-	.chat {
-		position: absolute;
-		width: 350px;
-		background: linear-gradient(90deg, #009cf5 -30%, #3231f9 100%);
-		min-height: 100vh;
-		height: 100%;
 	}
 </style>
 

@@ -5,7 +5,10 @@
 		<div class="mt-6 text-center sm:text-left">
 			<button
 				v-if="button"
-				@click="el.is.small ? toggleShow() : button.callback()"
+				@click="
+				// el.is.small ? toggleShow() : button.callback()
+				button.callback()
+				"
 				class="base-btn focus:outline-none w-full sm:w-auto sm:mr-3 mb-3 sm:mb-0"
 			>{{ button.name }}</button>
 			<p v-if="show && el.is.small" class="card-body text-justify mt-2">{{ body }}</p>
@@ -17,7 +20,7 @@
 					:href="icon.url"
 					target="_blank"
 				>
-					<v-icon class="align-middle mx-4 sm:mx-2" :scale="el.is.small ? 1.8 : 1.2" :name="icon.key"/>
+					<v-icon class="align-middle mx-4 sm:mx-2" :scale="el.is.small ? 1.8 : 1.2" :name="icon.key" />
 				</a>
 			</div>
 		</div>

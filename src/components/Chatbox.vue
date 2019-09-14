@@ -1,49 +1,55 @@
 <template>
-	<div class="h-full flex content-between flex-wrap overflow-scroll">
-		<div id="scroller" class="w-full py-4 px-2">
-			<transition-group name="list" tag="p">
-				<div
-					v-for="(message, index) in messages"
-					:key="index"
-					class="block w-full flex"
-					:class="message.fromUser ? 'justify-end text-right' : 'justify-left'"
-				>
-					<div
-						v-if="!isEmoji(message.text, 3)"
-						class="px-4 py-2 bg-chat m-2 block max-w-2/3 rounded-full"
-					>
-						<p class="p-1 text-gray-100">{{ message.text }}</p>
-					</div>
-
-					<p v-else class="p-1 mx-1 text-5xl">{{ message.text }}</p>
-				</div>
-			</transition-group>
-			<div id="anchor"></div>
+	<div class="h-screen relative">
+		<div class="p-2 px-4 flex justify-end text-white">
+			<button @click="closeChat">⤫</button>
 		</div>
-		<form class="block w-full sticky pin-b form-bg" @submit.prevent="send">
-			<div class="flex items-center bg-white p-3 m-4 rounded-full">
-				<span v-show="$socket.connected" class="dot bg-green"></span>
-				<span v-show="!$socket.connected" class="dot bg-red-light"></span>
-				<input
-					v-uppercaseInitial
-					v-model="message"
-					class="resize-none appearance-none bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-4 leading-tight focus:outline-none text-xl"
-					:placeholder="messages.length < 3 ? 'Write your name' : 'Say something'"
-				/>
-				<button
-					@click.prevent="send"
-					:disabled="inputDisabled"
-					class="flex-shrink-0 bg-blue hover:bg-indigo-500 hover:border-indigo-500 text-md text-white rounded-full"
-					type="button"
-				>
-					<v-icon
-						class="align-middle m-2 mx-3"
-						:spin="connecting"
-						:name="connecting ? 'cog' : 'paper-plane'"
-					/>
-				</button>
+
+		<div class="h-full overflow-scroll" style="overscroll-behavior-y: contain;">
+			<div id="scroller" class="w-full pb-2 px-2" style="margin-bottom: 120px;">
+				<transition-group name="list" tag="p">
+					<div
+						v-for="(message, index) in messages"
+						:key="index"
+						class="block w-full flex"
+						:class="message.fromUser ? 'justify-end text-right' : 'justify-left'"
+					>
+						<div
+							v-if="!isEmoji(message.text, 3)"
+							class="px-4 py-2 bg-chat m-2 block max-w-2/3 rounded-full"
+						>
+							<p class="p-1 text-gray-100">{{ message.text }}</p>
+						</div>
+
+						<p v-else class="p-1 mx-1 text-5xl">{{ message.text }}</p>
+					</div>
+				</transition-group>
+				<div id="anchor"></div>
 			</div>
-		</form>
+			<form class="w-full fixed md:absolute pin-b pin-l form-bg" @submit.prevent="send">
+				<div class="flex items-center bg-white p-3 m-4 rounded-full">
+					<span v-show="$socket.connected" class="dot bg-green"></span>
+					<span v-show="!$socket.connected" class="dot bg-red-light"></span>
+					<input
+						v-uppercaseInitial
+						v-model="message"
+						class="resize-none appearance-none bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-4 leading-tight focus:outline-none text-xl"
+						:placeholder="messages.length < 3 ? 'Write your name' : 'Say something'"
+					/>
+					<button
+						@click.prevent="send"
+						:disabled="inputDisabled"
+						class="flex-shrink-0 bg-blue hover:bg-indigo-500 hover:border-indigo-500 text-md text-white rounded-full"
+						type="button"
+					>
+						<v-icon
+							class="align-middle m-2 mx-3"
+							:spin="connecting"
+							:name="connecting ? 'cog' : 'paper-plane'"
+						/>
+					</button>
+				</div>
+			</form>
+		</div>
 	</div>
 </template>
 
@@ -133,6 +139,10 @@
 
 			this.$store.dispatch('chat/addMessage', { text: this.message, fromUser: true });
 			this.message = "";
+		}
+
+		closeChat() {
+			this.$store.dispatch('chat/closeChat');
 		}
 
 		uppercaseInital(string): string {

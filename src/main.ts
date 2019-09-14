@@ -15,9 +15,7 @@ Vue.component('v-icon', Icon);
 
 const socket = io('https://avanti.ddns.net', {
 	autoConnect: false,
-	transports: ['websocket'],
-	reconnection: false,
-	reconnectionAttempts: 1
+	transports: ['websocket']
 });
 
 Vue.use(VueSocketIOExt, socket);
