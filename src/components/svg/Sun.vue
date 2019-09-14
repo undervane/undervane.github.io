@@ -47,7 +47,7 @@
 		}
 
 		toggleStatus(event) {
-			if (!this.isChatOpen) { this.$store.dispatch("light/toggle", event) }
+			if (!this.isChatOpen) { this.$store.dispatch("light/toggle", event); }
 		}
 	}
 </script>
