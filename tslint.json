@@ -18,6 +18,7 @@
       "tabs",
       2
     ],
+    "max-line-length": false,
     "interface-name": false,
     "ordered-imports": false,
     "object-literal-sort-keys": false,
