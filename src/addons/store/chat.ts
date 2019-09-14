@@ -7,6 +7,7 @@ export class ChatModule extends VuexModule {
 	open = false;
 	firstLoad = true;
 	disabled = true;
+	placeholder = 'Write your name';
 	messages = [] as ChatMessage[];
 
 	@Action
@@ -44,6 +45,11 @@ export class ChatModule extends VuexModule {
 	}
 
 	@Action
+	setPlaceholder(text: string) {
+		this.context.commit('SET_PLACEHOLDER', text);
+	}
+
+	@Action
 	async addInitialMessages() {
 		const welcomeMessage = {
 			text: "Hey! Thanks for coming over here, what's your name?",
@@ -77,6 +83,11 @@ export class ChatModule extends VuexModule {
 	@Mutation
 	SET_DISABLED(status: boolean) {
 		this.disabled = status;
+	}
+
+	@Mutation
+	SET_PLACEHOLDER(text: string) {
+		this.placeholder = text;
 	}
 
 	@Mutation

@@ -28,12 +28,13 @@
 			<form class="w-full fixed md:absolute pin-b pin-l form-bg" @submit.prevent="send">
 				<div class="flex items-center bg-white p-3 m-4 rounded-full">
 					<span v-show="$socket.connected" class="dot bg-green"></span>
-					<span v-show="!$socket.connected" class="dot bg-red-light"></span>
+					<span v-show="$socket.disconnected" class="dot bg-red-light"></span>
 					<input
 						v-uppercaseInitial
+						:disabled="inputDisabled"
 						v-model="message"
 						class="resize-none appearance-none bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-4 leading-tight focus:outline-none text-xl"
-						:placeholder="messages.length < 3 ? 'Write your name' : 'Say something'"
+						:placeholder="placeholder"
 					/>
 					<button
 						@click.prevent="send"
@@ -79,25 +80,33 @@
 			return this.$store.state.chat.messages;
 		}
 
+		get placeholder() {
+			return this.$store.state.chat.placeholder || 'Say something';
+		}
+
 		get inputDisabled() {
 			return this.$store.state.chat.disabled;
 		}
 
 		@Socket('connect')
 		async onConnect(obj) {
-			this.connecting = false;
 
 			await sleep(300);
 			this.$store.dispatch('chat/addMessage', {
 				text: 'Yay! Hello ' + (this.$socket.client.io.opts.query! as any).name,
 				fromUser: false
 			});
+
+			this.connecting = false;
+			this.$store.dispatch('chat/setPlaceholder', 'Write here...');
 			this.$store.dispatch('chat/setDisabled', false);
 		}
 
 		@Socket('disconnect')
 		onDisconnect(response) {
 			this.$socket.client.disconnect();
+			this.$store.dispatch('chat/setDisabled', true);
+			this.$store.dispatch('chat/setPlaceholder', 'Not connected');
 		}
 
 		@Socket('response')
@@ -128,6 +137,7 @@
 
 			if (this.messages.length === 2) {
 				this.$store.dispatch('chat/setDisabled', true);
+				this.$store.dispatch('chat/setPlaceholder', 'Connecting...');
 				this.$socket.client.io.opts.query = { name: this.message };
 				this.$socket.client.connect();
 				this.connecting = true;
