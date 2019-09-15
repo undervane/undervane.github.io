@@ -148,13 +148,18 @@
 			}
 
 			if (this.messages.length === 2) {
+
+				if (this.isCommand(message)) {
+					return;
+				}
+
 				this.$store.dispatch('chat/setDisabled', true);
 				this.$store.dispatch('chat/setPlaceholder', 'Connecting...');
 				this.$socket.client.io.opts.query = { name: message };
 				this.$socket.client.connect();
 				this.connecting = true;
 			} else {
-				this.$socket.client.emit('message', message);
+				this.$socket.client.emit(this.isCommand(message) ? 'command' : 'message', message);
 			}
 
 			this.$store.dispatch('chat/addMessage', { text: message, fromUser: true });
@@ -167,6 +172,16 @@
 
 		uppercaseInital(value: string): string {
 			return value.charAt(0).toUpperCase() + value.slice(1);
+		}
+
+		isCommand(value: string): boolean {
+			if (typeof value !== 'string') {
+				return false;
+			}
+
+			const regex = /^\/([^@\s]+)\s?(.*)$/i;
+
+			return !!value.match(regex);
 		}
 
 		isEmoji(value: string, max = 3): boolean {
