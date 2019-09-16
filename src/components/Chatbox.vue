@@ -50,14 +50,13 @@
 					/>
 					<button
 						@click.prevent="() => send()"
-						:disabled="inputDisabled"
 						class="flex-shrink-0 bg-blue hover:bg-indigo-500 hover:border-indigo-500 text-md text-white rounded-full"
 						type="button"
 					>
 						<v-icon
 							class="align-middle m-2 mx-3"
 							:spin="connecting"
-							:name="connecting ? 'cog' : 'paper-plane'"
+							:name="connecting ? 'cog' : hasDisconnected ? 'sync-alt' : 'paper-plane'"
 						/>
 					</button>
 				</div>
@@ -70,6 +69,7 @@
 	import { Component, Vue } from "vue-property-decorator";
 	import 'vue-awesome/icons/paper-plane';
 	import 'vue-awesome/icons/cog';
+	import 'vue-awesome/icons/sync-alt';
 	import { Socket } from 'vue-socket.io-extended';
 	import { sleep } from '../utils';
 
@@ -90,6 +90,10 @@
 
 		get messages() {
 			return this.$store.state.chat.messages;
+		}
+
+		get hasDisconnected() {
+			return this.$store.state.chat.hasDisconnected;
 		}
 
 		get placeholder() {
@@ -117,8 +121,7 @@
 		@Socket('disconnect')
 		onDisconnect(response) {
 			this.$socket.client.disconnect();
-			this.$store.dispatch('chat/setDisabled', true);
-			this.$store.dispatch('chat/setPlaceholder', 'Not connected');
+			this.$store.dispatch('chat/disconnected');
 		}
 
 		@Socket('response')
@@ -138,6 +141,11 @@
 		}
 
 		send(message = this.message) {
+
+			if (this.hasDisconnected) {
+				this.reconnect();
+				return;
+			}
 
 			if (
 				message === "" ||
@@ -170,20 +178,6 @@
 			this.$store.dispatch('chat/closeChat');
 		}
 
-		uppercaseInital(value: string): string {
-			return value.charAt(0).toUpperCase() + value.slice(1);
-		}
-
-		isCommand(value: string): boolean {
-			if (typeof value !== 'string') {
-				return false;
-			}
-
-			const regex = /^\/([^@\s]+)\s?(.*)$/i;
-
-			return !!value.match(regex);
-		}
-
 		isEmoji(value: string, max = 3): boolean {
 
 			if (typeof value !== 'string') {
@@ -194,6 +188,21 @@
 
 			return !!value.match(regex);
 		}
+
+		private reconnect() {
+			this.$store.dispatch('chat/reset');
+		}
+
+		private isCommand(value: string): boolean {
+			if (typeof value !== 'string') {
+				return false;
+			}
+
+			const regex = /^\/([^@\s]+)\s?(.*)$/i;
+
+			return !!value.match(regex);
+		}
+
 	}
 </script>
 

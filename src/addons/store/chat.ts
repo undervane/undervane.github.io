@@ -7,6 +7,7 @@ export class ChatModule extends VuexModule {
 	open = false;
 	firstLoad = true;
 	disabled = true;
+	hasDisconnected = false;
 	placeholder = 'Write your name';
 	messages = [] as ChatMessage[];
 
@@ -35,6 +36,13 @@ export class ChatModule extends VuexModule {
 	}
 
 	@Action
+	async reset() {
+		this.context.commit('RESET');
+		await sleep(600);
+		this.context.dispatch('openChat');
+	}
+
+	@Action
 	addMessage(message: ChatMessage) {
 		this.context.commit('ADD_MESSAGE', message);
 	}
@@ -42,6 +50,13 @@ export class ChatModule extends VuexModule {
 	@Action
 	setDisabled(status: boolean) {
 		this.context.commit('SET_DISABLED', status);
+	}
+
+	@Action
+	disconnected() {
+		this.context.dispatch('setDisabled', true);
+		this.context.dispatch('setPlaceholder', 'Not connected');
+		this.context.commit('SET_HAS_DISCONNECTED', true);
 	}
 
 	@Action
@@ -73,6 +88,20 @@ export class ChatModule extends VuexModule {
 	@Mutation
 	SET_FIRST_LOAD(status: boolean) {
 		this.firstLoad = status;
+	}
+
+	@Mutation
+	SET_HAS_DISCONNECTED(status: boolean) {
+		this.hasDisconnected = status;
+	}
+
+	@Mutation
+	RESET() {
+		this.firstLoad = true;
+		this.disabled = true;
+		this.placeholder = 'Write your name';
+		this.hasDisconnected = false;
+		this.messages = [];
 	}
 
 	@Mutation
