@@ -13,9 +13,9 @@ import '@/assets/scss/global.scss';
 
 Vue.component('v-icon', Icon);
 
-const socket = io('https://avanti.ddns.net', {
+const socket = io(process.env.VUE_APP_WSS_HOST, {
 	autoConnect: false,
-	transports: ['websocket'],
+	transports: ['websocket', 'polling'],
 	reconnectionAttempts: 10
 });
 
