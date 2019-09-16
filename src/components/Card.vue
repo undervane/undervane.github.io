@@ -11,7 +11,7 @@
 				"
 				class="base-btn focus:outline-none w-full sm:w-auto sm:mr-3 mb-3 sm:mb-0"
 			>{{ button.name }}</button>
-			<p v-if="show && el.is.small" class="card-body text-justify mt-2">{{ body }}</p>
+			<p v-if="el.is.small" class="text-lg text-blue-light text-justify mt-2">{{ body }}</p>
 			<div :v-if="social" class="w-full my-5 sm:inline">
 				<a
 					class="card-icon cursor-pointer text-blue-lighter hover:text-blue"

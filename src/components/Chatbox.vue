@@ -12,7 +12,7 @@
 				class="flex-grow overflow-x-hidden overflow-y-auto scrolling-touch w-full pt-8 px-2 pb-4 remove-scrollbar"
 				style="overscroll-behavior-y: contain;"
 			>
-				<transition-group name="list" tag="p">
+				<transition-group name="list" tag="div">
 					<div
 						v-for="(message, index) in messages"
 						:key="`${index}-${message}`"

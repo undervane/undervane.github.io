@@ -134,7 +134,7 @@
 	.card {
 		z-index: 1;
 		max-width: 33em;
-		@apply h-full w-full px-6 select-none my-5;
+		@apply h-full w-full px-6 select-none mb-3;
 	}
 
 	.iceberg {
