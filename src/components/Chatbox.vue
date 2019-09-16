@@ -9,7 +9,7 @@
 			<div
 				v-lockToBottom
 				id="scroller"
-				class="flex-grow overflow-x-hidden overflow-y-auto scrolling-touch w-full pt-8 px-2 pb-4"
+				class="flex-grow overflow-x-hidden overflow-y-auto scrolling-touch w-full pt-8 px-2 pb-4 remove-scrollbar"
 				style="overscroll-behavior-y: contain;"
 			>
 				<transition-group name="list" tag="p">
@@ -32,7 +32,10 @@
 			</div>
 			<form class="w-full form-bg py-4" @submit.prevent="() => send()">
 				<transition name="commands-fade">
-					<div v-if="this.$socket.connected" class="flex pl-2 pb-4 scrolling-touch overflow-x-auto">
+					<div
+						v-if="this.$socket.connected"
+						class="flex pl-2 pb-4 scrolling-touch overflow-x-auto remove-scrollbar"
+					>
 						<a
 							v-for="command in commands"
 							class="command-item mx-2 px-2 py-1 rounded-full bg-white"
@@ -279,6 +282,14 @@
 
 	}
 </script>
+
+<style lang="scss">
+	.remove-scrollbar::-webkit-scrollbar {
+		width: 0px; /* remove scrollbar space */
+		height: 0px; /* remove scrollbar space */
+		background: transparent; /* optional: just make scrollbar invisible */
+	}
+</style>
 
 <style lang="scss" scoped>
 	.bg-chat {
