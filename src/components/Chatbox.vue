@@ -1,15 +1,17 @@
 <template>
 	<div class="h-screen relative">
-		<div class="p-2 px-4 flex justify-end text-white">
-			<button @click="closeChat">⤫</button>
+		<div class="md:hidden absolute w-full flex justify-end z-10">
+			<button @click="closeChat" class="m-2" style="color: #c47b1a">
+				<v-icon scale="1.3" name="arrow-right" class="h-full" />
+			</button>
 		</div>
-
-		<div
-			v-lockToBottom
-			class="h-full overflow-auto scrolling-touch"
-			style="overscroll-behavior-y: contain;"
-		>
-			<div id="scroller" class="w-full pb-2 px-2" style="margin-bottom: 170px;">
+		<div class="h-screen flex flex-col justify-between">
+			<div
+				v-lockToBottom
+				id="scroller"
+				class="flex-grow overflow-x-hidden overflow-y-auto scrolling-touch w-full pt-8 px-2 pb-4"
+				style="overscroll-behavior-y: contain;"
+			>
 				<transition-group name="list" tag="p">
 					<div
 						v-for="(message, index) in messages"
@@ -28,9 +30,9 @@
 					</div>
 				</transition-group>
 			</div>
-			<form class="w-full fixed md:absolute pin-b pin-l form-bg py-4" @submit.prevent="() => send()">
+			<form class="w-full form-bg py-4" @submit.prevent="() => send()">
 				<transition name="commands-fade">
-					<div v-if="this.$socket.connected" class="flex pl-2 scrolling-touch overflow-x-auto">
+					<div v-if="this.$socket.connected" class="flex pl-2 pb-4 scrolling-touch overflow-x-auto">
 						<a
 							v-for="command in commands"
 							class="command-item mx-2 px-2 py-1 rounded-full bg-white"
@@ -71,6 +73,7 @@
 	import 'vue-awesome/icons/paper-plane';
 	import 'vue-awesome/icons/cog';
 	import 'vue-awesome/icons/sync-alt';
+	import 'vue-awesome/icons/arrow-right';
 	import { Socket } from 'vue-socket.io-extended';
 	import { sleep } from '../utils';
 
@@ -284,10 +287,6 @@
 
 	.form-bg {
 		background: #5959fe;
-		::-webkit-scrollbar {
-			width: 0px;
-			background: transparent; /* make scrollbar transparent */
-		}
 	}
 
 	.dot {
