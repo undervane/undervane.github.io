@@ -4,8 +4,12 @@
 			<button @click="closeChat">⤫</button>
 		</div>
 
-		<div class="h-full overflow-scroll" style="overscroll-behavior-y: contain;">
-			<div id="scroller" class="w-full pb-2 px-2" style="margin-bottom: 145px;">
+		<div
+			v-lockToBottom
+			class="h-full overflow-auto scrolling-touch"
+			style="overscroll-behavior-y: contain;"
+		>
+			<div id="scroller" class="w-full pb-2 px-2" style="margin-bottom: 170px;">
 				<transition-group name="list" tag="p">
 					<div
 						v-for="(message, index) in messages"
@@ -23,22 +27,19 @@
 						<p v-else class="p-1 mx-1 text-5xl">{{ message.text }}</p>
 					</div>
 				</transition-group>
-				<div id="anchor"></div>
 			</div>
-			<form class="w-full fixed md:absolute pin-b pin-l form-bg" @submit.prevent="() => send()">
+			<form class="w-full fixed md:absolute pin-b pin-l form-bg py-4" @submit.prevent="() => send()">
 				<transition name="commands-fade">
-					<div v-if="this.$socket.connected" class="flex ml-2 mr-4 mt-4 overflow-x-auto">
-						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/contact')">Contact</button>
-						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/hello')">Hello</button>
-						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/close')">Close</button>
-						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/close')">Close</button>
-						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/close')">Close</button>
-						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/close')">Close</button>
-						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/close')">Close</button>
-						<button class="mx-2 px-2 py-1 rounded-full bg-white" @click.prevent="send('/close')">Close</button>
+					<div v-if="this.$socket.connected" class="flex pl-2 scrolling-touch overflow-x-auto">
+						<a
+							v-for="command in commands"
+							class="command-item mx-2 px-2 py-1 rounded-full bg-white"
+							@click.prevent="send(command.handler)"
+						>{{ command.name }}</a>
+						<div class="px-2"></div>
 					</div>
 				</transition>
-				<div class="flex items-center bg-white p-3 m-4 rounded-full">
+				<div class="flex items-center bg-white mx-4 p-3 rounded-full">
 					<span v-show="$socket.connected" class="dot bg-green"></span>
 					<span v-show="$socket.disconnected" class="dot bg-red-light"></span>
 					<input
@@ -79,6 +80,18 @@
 				componentUpdated(el: any) {
 					el.value = el.value.charAt(0).toUpperCase() + el.value.slice(1);
 				}
+			},
+			lockToBottom: {
+				componentUpdated(el: HTMLElement) {
+					setTimeout(() => {
+						const nearEnd = 300;
+						const scrollIsNearEnd = (el.scrollHeight - nearEnd) < (el.clientHeight + el.scrollTop);
+
+						if (scrollIsNearEnd) {
+							el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+						}
+					}, 100);
+				}
 			}
 		}
 	})
@@ -87,6 +100,64 @@
 		connecting = false;
 
 		message = "";
+
+		commands = [
+			{
+				id: 0,
+				name: 'Contact',
+				handler: '/contact'
+			},
+			{
+				id: 1,
+				name: 'Hello',
+				handler: '/hello'
+			},
+			{
+				id: 2,
+				name: 'Close',
+				handler: '/close'
+			},
+			{
+				id: 3,
+				name: 'Close',
+				handler: '/close'
+			},
+			{
+				id: 4,
+				name: 'Close',
+				handler: '/close'
+			},
+			{
+				id: 5,
+				name: 'Close',
+				handler: '/close'
+			},
+			{
+				id: 6,
+				name: 'Close',
+				handler: '/close'
+			},
+			{
+				id: 7,
+				name: 'Close',
+				handler: '/close'
+			},
+			{
+				id: 8,
+				name: 'Close',
+				handler: '/close'
+			},
+			{
+				id: 9,
+				name: 'Close',
+				handler: '/close'
+			},
+			{
+				id: 10,
+				name: 'Close',
+				handler: '/close'
+			},
+		];
 
 		get messages() {
 			return this.$store.state.chat.messages;
@@ -212,7 +283,11 @@
 	}
 
 	.form-bg {
-		background: linear-gradient(90deg, #009cf5 -30%, #3231f9 100%);
+		background: #5959fe;
+		::-webkit-scrollbar {
+			width: 0px;
+			background: transparent; /* make scrollbar transparent */
+		}
 	}
 
 	.dot {
