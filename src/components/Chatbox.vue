@@ -1,22 +1,22 @@
 <template>
-	<div class="h-screen relative">
-		<div class="md:hidden absolute w-full flex justify-end z-10">
-			<button @click="closeChat" class="m-2" style="color: #c47b1a">
-				<v-icon scale="1.3" name="arrow-right" class="h-full" />
-			</button>
-		</div>
-		<div class="h-screen flex flex-col justify-between">
+	<div class="h-full relative">
+		<div class="h-full flex flex-col justify-between">
+			<div class="md:hidden fixed pin-t w-full flex justify-end z-10 form-bg">
+				<button @click="closeChat" class="mx-2 my-2 text-white">
+					<v-icon scale="1.3" name="arrow-right" class="h-full" />
+				</button>
+			</div>
 			<div
 				v-lockToBottom
 				id="scroller"
-				class="flex-grow overflow-x-hidden overflow-y-auto scrolling-touch w-full pt-8 px-2 pb-4 remove-scrollbar"
+				class="flex-grow overflow-x-hidden overflow-y-auto scrolling-touch w-full pt-12 md:pt-8 px-2 md:pb-4 remove-scrollbar"
 				style="overscroll-behavior-y: contain;"
 			>
-				<transition-group name="list" tag="div">
+				<transition-group name="list" tag="div" class="h-full">
 					<div
 						v-for="(message, index) in messages"
 						:key="`${index}-${message}`"
-						class="block w-full flex"
+						class="chat-item w-full flex"
 						:class="message.fromUser ? 'justify-end text-right' : 'justify-left'"
 					>
 						<div
@@ -30,11 +30,11 @@
 					</div>
 				</transition-group>
 			</div>
-			<form class="w-full form-bg py-4" @submit.prevent="() => send()">
+			<form class="w-full fixed md:relative pin-b form-bg py-3" @submit.prevent="() => send()">
 				<transition name="commands-fade">
 					<div
 						v-if="this.$socket.connected"
-						class="flex pl-2 pb-4 scrolling-touch overflow-x-auto remove-scrollbar"
+						class="flex pl-2 pb-3 scrolling-touch overflow-x-auto remove-scrollbar"
 					>
 						<a
 							v-for="command in commands"
@@ -44,23 +44,23 @@
 						<div class="px-2"></div>
 					</div>
 				</transition>
-				<div class="flex items-center bg-white mx-4 p-3 rounded-full">
+				<div class="flex items-center bg-white mx-4 p-1 md:p-2 rounded-full">
 					<span v-show="$socket.connected" class="dot bg-green"></span>
 					<span v-show="$socket.disconnected" class="dot bg-red-light"></span>
 					<input
 						v-uppercaseInitial
 						:disabled="inputDisabled"
 						v-model="message"
-						class="resize-none appearance-none bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-4 leading-tight focus:outline-none text-xl"
+						class="resize-none appearance-none bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-4 leading-tight focus:outline-none text-lg"
 						:placeholder="placeholder"
 					/>
 					<button
 						@click.prevent="() => send()"
-						class="flex-shrink-0 bg-blue hover:bg-indigo-500 hover:border-indigo-500 text-md text-white rounded-full"
+						class="mr-px flex-shrink-0 bg-blue hover:bg-indigo-500 hover:border-indigo-500 text-md text-white rounded-full"
 						type="button"
 					>
 						<v-icon
-							class="align-middle m-2 mx-3"
+							class="align-middle m-2 mx-3 pr-px"
 							:spin="connecting"
 							:name="connecting ? 'cog' : hasDisconnected ? 'sync-alt' : 'paper-plane'"
 						/>
@@ -191,7 +191,7 @@
 			});
 
 			this.connecting = false;
-			this.$store.dispatch('chat/setPlaceholder', 'Write here...');
+			this.$store.dispatch('chat/setPlaceholder', 'Write here');
 			this.$store.dispatch('chat/setDisabled', false);
 		}
 
@@ -297,7 +297,7 @@
 	}
 
 	.form-bg {
-		background: #5959fe;
+		background: #4068f7;
 	}
 
 	.dot {
@@ -344,5 +344,9 @@
 	.commands-fade-leave-to {
 		transform: translateX(-10px);
 		opacity: 0;
+	}
+
+	.chat-item:last-child {
+		padding-bottom: 11rem;
 	}
 </style>

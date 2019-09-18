@@ -1,6 +1,6 @@
 <template>
 	<div class="relative overflow-x-hidden">
-		<div class="chat">
+		<div class="chat" :class="{'pointer-events-none md:pointer-events-auto': !isChatOpen}">
 			<Chatbox />
 		</div>
 
@@ -34,12 +34,14 @@
 <style lang="scss" scoped>
 	.isChatOpen {
 		transform: translateX(100vw);
+		height: 100vh;
+		@apply pointer-events-none;
 	}
 
 	.chat {
 		position: fixed;
 		width: 100vw;
-		background: linear-gradient(90deg, #009cf5 -30%, #3231f9 100%);
+		background: #2756f8;
 		min-height: 100vh;
 		height: 100%;
 	}
@@ -47,6 +49,8 @@
 	@screen md {
 		.isChatOpen {
 			transform: translateX(350px);
+			height: inherit;
+			@apply pointer-events-auto;
 		}
 		.chat {
 			width: 350px;
