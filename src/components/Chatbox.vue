@@ -28,9 +28,19 @@
 
 						<p v-else class="p-1 mx-1 text-5xl">{{ message.text }}</p>
 					</div>
+					<div
+						v-if="$refs.form"
+						class="md:hidden"
+						key="last"
+						:style="{ height: `${$refs.form.clientHeight + 10}px` }"
+					></div>
 				</transition-group>
 			</div>
-			<form class="w-full fixed md:relative pin-b form-bg py-3" @submit.prevent="() => send()">
+			<form
+				ref="form"
+				class="w-full fixed md:relative pin-b form-bg py-3"
+				@submit.prevent="() => send()"
+			>
 				<transition name="commands-fade">
 					<div
 						v-if="this.$socket.connected"
@@ -344,9 +354,5 @@
 	.commands-fade-leave-to {
 		transform: translateX(-10px);
 		opacity: 0;
-	}
-
-	.chat-item:last-child {
-		padding-bottom: 11rem;
 	}
 </style>
