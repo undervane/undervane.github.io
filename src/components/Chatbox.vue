@@ -41,7 +41,8 @@
 				class="w-full fixed md:relative pin-b form-bg py-3"
 				@submit.prevent="() => send()"
 			>
-				<transition name="commands-fade">
+				<!-- WIP:Commands are temporally disabled until response parsing is implemented -->
+				<!-- <transition name="commands-fade">
 					<div
 						v-if="this.$socket.connected"
 						class="flex pl-2 pb-3 scrolling-touch overflow-x-auto remove-scrollbar"
@@ -53,7 +54,7 @@
 						>{{ command.name }}</a>
 						<div class="px-2"></div>
 					</div>
-				</transition>
+				</transition>-->
 				<div class="flex items-center bg-white mx-4 p-1 md:p-2 rounded-full">
 					<span v-show="$socket.connected" class="dot bg-green"></span>
 					<span v-show="$socket.disconnected" class="dot bg-red-light"></span>
