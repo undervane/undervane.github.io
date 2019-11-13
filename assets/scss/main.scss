@@ -1,0 +1,26 @@
+@import 'fonts';
+@import 'mixins';
+@import 'colors';
+@import 'transitions';
+
+/* General */
+
+* {
+  font-family: 'Open Sans', sans-serif;
+}
+
+html, body {
+  scroll-behavior: smooth;
+}
+
+h1 {
+  font-size: 2em;
+  font-weight: 700;
+}
+
+/* Utils */
+
+.highlight-disable {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent;
+}
