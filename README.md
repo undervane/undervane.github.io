@@ -1,48 +1,22 @@
-# undervane-vue
+# MiPigu
 
-This project was generated with vue create with following options:
+> My own personal brand webpage
 
-```
-Vue CLI v3.6.3
-? Please pick a preset: Manually select features
-? Check the features needed for your project: Babel, TS, Vuex, CSS Pre-processor
-s, Linter
-? Use class-style component syntax? Yes
-? Use Babel alongside TypeScript for auto-detected polyfills? Yes
-? Pick a CSS pre-processor (PostCSS, Autoprefixer and CSS Modules are supported 
-by default): Sass/SCSS (with dart-sass)
-? Pick a linter / formatter config: TSLint
-? Pick additional lint features: (Press <space> to select, <a> to toggle all, <i
-> to invert selection)Lint on save
-? Where do you prefer placing config for Babel, PostCSS, ESLint, etc.? In packag
-e.json
-? Save this as a preset for future projects? No
-```
+## Build Setup
 
-## Project setup
-```
-npm install
+``` bash
+# install dependencies
+$ npm run install
+
+# serve with hot reload at localhost:3000
+$ npm run dev
+
+# build for production and launch server
+$ npm run build
+$ npm run start
+
+# generate static project
+$ npm run generate
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).

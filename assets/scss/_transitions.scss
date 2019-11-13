@@ -1,0 +1,44 @@
+// ELEMENT TRANSITIONS
+
+.text-light-transition {
+  transition: color 2s;
+}
+
+.bg-light-transition {
+  transition: background-color 2s;
+}
+
+// ANIMATIONS
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+// PAGE TRANSITIONS
+
+/* during entering and leaving : */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.6s ease;
+}
+
+/* entering start */
+.page-enter {
+  opacity: 0;
+}
+
+/* entering end */
+.page-enter-to {
+  opacity: 1;
+}
+
+/* leaving start */
+.page-leave {
+  opacity: 0;
+}
+
+/* leaving end */
+.page-leave-to {
+  opacity: 0;
+}
