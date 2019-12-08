@@ -154,6 +154,6 @@ export default {
   env: {
     WSS_HOST:
       process.env.WSS_HOST ||
-      'https://e071b80f530dbd245bef6afff53846ef.balena-devices.com'
+      'https://213.195.107.219/telegram/webhook'
   }
 }
