@@ -152,8 +152,6 @@ export default {
     }
   },
   env: {
-    WSS_HOST:
-      process.env.WSS_HOST ||
-      'https://213.195.107.219/telegram/webhook'
+    WSS_HOST: process.env.WSS_HOST || 'https://undervane.tk'
   }
 }
