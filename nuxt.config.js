@@ -152,6 +152,6 @@ export default {
     }
   },
   env: {
-    WSS_HOST: process.env.WSS_HOST || 'https://undervane.tk'
+    WSS_HOST: process.env.WSS_HOST || 'https://chatist-app.herokuapp.com'
   }
 }
