@@ -11,10 +11,11 @@
     </client-only>
 
     <BlogImage
+      v-if="image.url"
       maxQuality
-      url="Rose%20of%20many%20colours"
-      alt="Roses of many colors"
-      author="Photo by Patrick Fore on Unsplash"
+      :url="image.url"
+      :alt="image && image.alt"
+      :author="image && image.author"
       :dark="dark"
     />
     <BlogContent
@@ -64,8 +65,9 @@
           renderFunc: fileContent.vue.render,
           staticRenderFns: fileContent.vue.staticRenderFns,
           image: {
-            main: attr.image && attr.image.main,
-            og: attr.image && attr.image.og
+            url: attr.image && attr.image.url,
+            alt: attr.image && attr.image.alt,
+            author: attr.image && attr.image.author
           }
         }
       } catch (e) {
