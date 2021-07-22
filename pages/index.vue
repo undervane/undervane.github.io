@@ -9,7 +9,7 @@
       @buttonClick="toggleChat"
     >
       <p class="content">
-        I'm a Frontend Engineer working on human interaction. I think a quality product or service depends not only on one area but in a bunch of them. My intent is to be able to explore them all and get rid of laggy experiences. Sometimes I do
+        I'm a Backend Engineer working on human interaction. I think a quality product or service depends not only on one area but in a bunch of them. My intent is to be able to explore them all and get rid of laggy experiences. Sometimes I do
         <nuxt-link to="blog">write down my thoughts</nuxt-link>.
       </p>
     </LandingCard>
@@ -85,12 +85,12 @@
     },
     head() {
       return {
-        title: 'Sergio Márquez | Frontend Engineer',
+        title: 'Sergio Márquez | Backend Engineer',
         meta: [
           {
             hid: 'description',
             name: 'description',
-            content: `I'm a Frontend Engineer working on human interaction. I think a quality product or service depends not only on one area but in a bunch of them. My intent is to be able to explore them all and get rid of laggy experiences.`
+            content: `I'm a Backend Engineer working on human interaction. I think a quality product or service depends not only on one area but in a bunch of them. My intent is to be able to explore them all and get rid of laggy experiences.`
           }
         ]
       }
