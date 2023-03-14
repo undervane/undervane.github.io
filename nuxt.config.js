@@ -152,6 +152,6 @@ export default {
     }
   },
   env: {
-    WSS_HOST: process.env.WSS_HOST || 'https://chatist-app.herokuapp.com'
+    WSS_HOST: process.env.WSS_HOST || 'https://chatist.onrender.com'
   }
 }
